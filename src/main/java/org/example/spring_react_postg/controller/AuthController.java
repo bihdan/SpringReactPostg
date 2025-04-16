@@ -52,9 +52,10 @@ public class AuthController {
     @Autowired
     JwtUtils jwtUtils;
 
+    //FIXME: This API has a problem, the problem occurs during testing in postman
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-
+        // JWT Authorization and Authentication
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
@@ -73,6 +74,8 @@ public class AuthController {
                 roles));
     }
 
+
+    //FIXME: There is a problem with this API, the problem occurs when testing in postman with data that is already in the system
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {

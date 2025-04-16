@@ -19,6 +19,7 @@ public class Card {
     @JoinColumn(name = "deck_id", nullable = false)
     private Deck deck;
 
+    // TODO: create 'notes' and use
 //    @ManyToOne
 //    @JoinColumn(name = "note_id", nullable = true)
 //    private Note note;

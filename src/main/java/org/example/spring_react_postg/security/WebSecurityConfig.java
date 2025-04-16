@@ -29,7 +29,7 @@ import org.example.spring_react_postg.security.service.UserDetailsServiceImpl;
 // prePostEnabled = true) // by default
 public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
     @Autowired
-    UserDetailsServiceImpl userDetailsService;
+    UserDetailsServiceImpl userDetailsService; // FIXME: Error with beans and userRepository
 
     @Autowired
     private AuthEntryPointJwt unauthorizedHandler;
