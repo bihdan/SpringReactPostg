@@ -3,9 +3,22 @@ package org.example.spring_react_postg.controller;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import jakarta.validation.Valid;
 import java.util.stream.Collectors;
 
-import jakarta.validation.Valid;
+
+
+import org.example.spring_react_postg.model.ERole;
+import org.example.spring_react_postg.model.Role;
+import org.example.spring_react_postg.model.User;
+import org.example.spring_react_postg.payload.request.LoginRequest;
+import org.example.spring_react_postg.payload.request.SignupRequest;
+import org.example.spring_react_postg.payload.response.JwtResponse;
+import org.example.spring_react_postg.payload.response.MessageResponse;
+import org.example.spring_react_postg.repository.RoleRepository;
+import org.example.spring_react_postg.repository.UserRepository;
+import org.example.spring_react_postg.security.jwt.JwtUtils;
+import org.example.spring_react_postg.security.service.UserDetailsImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,17 +33,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import org.example.spring_react_postg.model.ERole;
-import org.example.spring_react_postg.model.Role;
-import org.example.spring_react_postg.model.User;
-import org.example.spring_react_postg.payload.request.LoginRequest;
-import org.example.spring_react_postg.payload.request.SignupRequest;
-import org.example.spring_react_postg.payload.response.JwtResponse;
-import org.example.spring_react_postg.payload.response.MessageResponse;
-import org.example.spring_react_postg.repository.RoleRepository;
-import org.example.spring_react_postg.repository.UserRepository;
-import org.example.spring_react_postg.security.jwt.JwtUtils;
-import org.example.spring_react_postg.security.service.UserDetailsImpl;
+
 
 //
 //@CrossOrigin(origins = "*", maxAge = 3600)
