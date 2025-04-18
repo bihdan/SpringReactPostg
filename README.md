@@ -23,6 +23,11 @@ spring.datasource.password=(your_postgre_password)
 
 Change (your_postgre_username) and (your_postgre_password) to yours postgreSQL username and password. 
 
+#### Maven
+Use termital
+
+    ./mvnw clean package
+
 #### Frontend
 
 Use termital
