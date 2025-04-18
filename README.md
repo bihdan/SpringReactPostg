@@ -17,9 +17,9 @@ The Java project uses the @Entity parameter, which creates tables.
 #### Backend
 Connect to database: in file (root)/src/main/resources/application.properties:
 
-spring.datasource.url=jdbc:postgresql://localhost:5432/flashcards
-spring.datasource.username=(your_postgre_username)
-spring.datasource.password=(your_postgre_password)
+    spring.datasource.url=jdbc:postgresql://localhost:5432/flashcards
+    spring.datasource.username=(your_postgre_username)
+    spring.datasource.password=(your_postgre_password)
 
 Change (your_postgre_username) and (your_postgre_password) to yours postgreSQL username and password. 
 
