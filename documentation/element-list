@@ -1,0 +1,9 @@
+org.example.spring_react_postg
+org.example.spring_react_postg.controller
+org.example.spring_react_postg.model
+org.example.spring_react_postg.payload.request
+org.example.spring_react_postg.payload.response
+org.example.spring_react_postg.repository
+org.example.spring_react_postg.security
+org.example.spring_react_postg.security.jwt
+org.example.spring_react_postg.security.service
