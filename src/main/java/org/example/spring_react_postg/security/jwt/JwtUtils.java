@@ -1,6 +1,5 @@
 package org.example.spring_react_postg.security.jwt;
 
-
 import java.security.Key;
 import java.util.Date;
 
@@ -15,16 +14,34 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
+/**
+ * Утиліти для роботи з JWT токенами.
+ * <p>
+ * Цей клас відповідає за генерацію, валідацію та витягнення даних з JWT токенів.
+ * Він використовує бібліотеку JJWT для створення та перевірки токенів, а також для декодування корисної інформації з токенів.
+ */
 @Component
 public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
+    /**
+     * Секретний ключ для підпису JWT токенів, конфігурується в application.properties.
+     */
     @Value("${spring_react_postg.app.jwtSecret}")
     private String jwtSecret;
 
+    /**
+     * Термін дії JWT токену в мілісекундах, конфігурується в application.properties.
+     */
     @Value("${spring_react_postg.app.jwtExpirationMs}")
     private int jwtExpirationMs;
 
+    /**
+     * Генерує JWT токен для вказаного користувача (Authentication).
+     *
+     * @param authentication об'єкт автентифікації, що містить інформацію про користувача
+     * @return JWT токен у вигляді рядка
+     */
     public String generateJwtToken(Authentication authentication) {
 
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
@@ -37,15 +54,34 @@ public class JwtUtils {
                 .compact();
     }
 
+    /**
+     * Генерує ключ для підпису JWT токенів з секретного ключа, заданого в конфігурації.
+     *
+     * @return ключ для підпису токену
+     */
     private Key key() {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
     }
 
+    /**
+     * Отримує ім'я користувача (subject) з JWT токену.
+     *
+     * @param token JWT токен
+     * @return ім'я користувача, яке міститься в токені
+     */
     public String getUserNameFromJwtToken(String token) {
         return Jwts.parser().setSigningKey(key()).build()
                 .parseClaimsJws(token).getBody().getSubject();
     }
 
+    /**
+     * Перевіряє, чи є JWT токен дійсним.
+     * <p>
+     * Перевіряється підпис, термін дії та формат токену.
+     *
+     * @param authToken JWT токен
+     * @return true, якщо токен дійсний, false в іншому випадку
+     */
     public boolean validateJwtToken(String authToken) {
         try {
             Jwts.parser().setSigningKey(key()).build().parse(authToken);

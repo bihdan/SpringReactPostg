@@ -17,11 +17,26 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * Клас, що реалізує {@link AuthenticationEntryPoint} для обробки несанкціонованих запитів.
+ * Використовується для того, щоб повертати повідомлення про помилку з кодом 401 (Unauthorized)
+ * у випадку, якщо користувач не авторизований або не має доступу до ресурсу.
+ */
 @Component
 public class AuthEntryPointJwt implements AuthenticationEntryPoint {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthEntryPointJwt.class);
 
+    /**
+     * Обробляє помилку автентифікації і генерує відповідь з кодом 401 (Unauthorized).
+     * Використовується, коли користувач не авторизований або не має доступу до ресурсу.
+     *
+     * @param request об'єкт {@link HttpServletRequest}, що містить дані запиту
+     * @param response об'єкт {@link HttpServletResponse}, що містить відповідь на запит
+     * @param authException виняток автентифікації
+     * @throws IOException якщо виникає помилка при обробці відповіді
+     * @throws ServletException якщо виникає помилка під час обробки запиту
+     */
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
             throws IOException, ServletException {

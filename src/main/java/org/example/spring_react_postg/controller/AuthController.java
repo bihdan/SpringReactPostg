@@ -34,31 +34,42 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-
-//
-//@CrossOrigin(origins = "*", maxAge = 3600)
+/**
+ * Контролер автентифікації та реєстрації користувачів.
+ * Обробляє запити на вхід до системи та створення нового користувача.
+ */
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+
+    /** Менеджер аутентифікації Spring Security. */
     @Autowired
     AuthenticationManager authenticationManager;
 
+    /** Репозиторій для доступу до користувачів. */
     @Autowired
     UserRepository userRepository;
 
+    /** Репозиторій для доступу до ролей. */
     @Autowired
     RoleRepository roleRepository;
 
+    /** Компонент для хешування паролів. */
     @Autowired
     PasswordEncoder encoder;
 
+    /** Утиліта для створення JWT-токенів. */
     @Autowired
     JwtUtils jwtUtils;
 
-    //FIXME: This API has a problem, the problem occurs during testing in postman
+    /**
+     * Аутентифікація користувача.
+     *
+     * @param loginRequest об'єкт із полями логіну та пароля
+     * @return JWT токен та інформація про користувача, якщо автентифікація пройшла успішно
+     */
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-        // JWT Authorization and Authentication
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
@@ -77,8 +88,12 @@ public class AuthController {
                 roles));
     }
 
-
-    //FIXME: There is a problem with this API, the problem occurs when testing in postman with data that is already in the system
+    /**
+     * Реєстрація нового користувача.
+     *
+     * @param signUpRequest об'єкт із полями імені користувача, email, пароля та списком ролей
+     * @return повідомлення про успішну реєстрацію або помилку, якщо користувач уже існує
+     */
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
@@ -93,7 +108,7 @@ public class AuthController {
                     .body(new MessageResponse("Error: Email is already in use!"));
         }
 
-        // Create new user's account
+        // Створення нового облікового запису користувача
         User user = new User(signUpRequest.getUsername(),
                 signUpRequest.getEmail(),
                 encoder.encode(signUpRequest.getPassword()));
@@ -112,13 +127,11 @@ public class AuthController {
                         Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(adminRole);
-
                         break;
                     case "mod":
                         Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(modRole);
-
                         break;
                     default:
                         Role userRole = roleRepository.findByName(ERole.ROLE_USER)

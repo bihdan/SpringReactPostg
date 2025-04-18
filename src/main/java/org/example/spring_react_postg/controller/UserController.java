@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Контролер для керування користувачами.
+ * Обробляє запити, пов’язані зі створенням, отриманням і автентифікацією користувачів.
+ */
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -20,29 +24,56 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * Конструктор контролера, що приймає сервіс користувачів.
+     *
+     * @param userService сервіс для обробки логіки користувачів
+     */
     @Autowired
     public UserController(UserService userService){
         this.userService = userService;
     }
 
+    /**
+     * Отримує список усіх користувачів.
+     *
+     * @return список користувачів у тілі відповіді
+     */
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
 
-
+    /**
+     * Повертає користувача за його ідентифікатором.
+     *
+     * @param id унікальний ідентифікатор користувача
+     * @return обгортка Optional з користувачем або порожня, якщо не знайдено
+     */
     @GetMapping("/{id}")
     public Optional<User> getUserById(@PathVariable Integer id) {
         return userService.getUserById(id);
     }
 
+    /**
+     * Реєструє нового користувача.
+     *
+     * @param user об’єкт користувача з даними
+     * @return повідомлення про створення користувача
+     */
     @PostMapping("/signup")
     public String signup(@RequestBody User user) {
         userService.saveUser(user);
         return "User created";
     }
 
+    /**
+     * Створює нового користувача з перевіркою наявності пароля.
+     *
+     * @param user об’єкт користувача з даними
+     * @return відповідь зі статусом створення або помилки
+     */
     @PostMapping("/createUser")
     public ResponseEntity<String> createUser(@RequestBody User user) {
         try {
@@ -52,11 +83,17 @@ public class UserController {
             userService.saveUser(user);
             return ResponseEntity.ok("User created");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating user: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error creating user: " + e.getMessage());
         }
     }
 
-
+    /**
+     * Перевіряє правильність пароля користувача.
+     *
+     * @param request запит з ім’ям користувача та паролем
+     * @return повідомлення про результат перевірки
+     */
     @PostMapping("/checkPassword")
     public String checkPassword(@RequestBody LoginRequest request) {
         Optional<User> userOpt = userRepository.findByUsername(request.getUsername());
@@ -72,36 +109,4 @@ public class UserController {
             return "Користувача не знайдено";
         }
     }
-
-
 }
-
-
-
-//    @PostMapping("/register")
-//    public ResponseEntity<?> registerUser(@RequestBody UserDTO userDTO) {
-//        if (userService.existsByUsername(userDTO.getUsername())) {
-//            return ResponseEntity.badRequest().body("Username is already taken!");
-//        }
-//
-//        if (userService.existsByEmail(userDTO.getEmail())) {
-//            return ResponseEntity.badRequest().body("Email is already in use!");
-//        }
-//
-//        User user = new User(userDTO.getUsername(), userDTO.getPassword(), userDTO.getEmail());
-//        userService.save(user);
-//
-//        String jwt = jwtUtils.generateJwtToken(user);
-//        return ResponseEntity.ok(new JwtResponse(jwt));
-//    }
-//
-//    @PostMapping("/users/login")
-//    public ResponseEntity<?> authenticateUser(@RequestBody LoginDTO loginDTO) {
-//        Authentication authentication = authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword())
-//        );
-//
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//        String jwt = jwtUtils.generateJwtToken(authentication);
-//        return ResponseEntity.ok(new JwtResponse(jwt));
-//    }

@@ -12,6 +12,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.example.spring_react_postg.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+/**
+ * Реалізація інтерфейсу {@link UserDetails} для користувача в контексті автентифікації та авторизації.
+ * <p>
+ * Цей клас використовується Spring Security для зберігання інформації про користувача, такої як ім'я, електронна пошта, пароль і ролі.
+ */
 public class UserDetailsImpl implements UserDetails {
     private static final long serialVersionUID = 1L;
 
@@ -21,11 +26,23 @@ public class UserDetailsImpl implements UserDetails {
 
     private String email;
 
+    /**
+     * Пароль користувача, який буде ігноруватись при серіалізації в JSON.
+     */
     @JsonIgnore
     private String password;
 
     private Collection<? extends GrantedAuthority> authorities;
 
+    /**
+     * Конструктор для створення об'єкта {@link UserDetailsImpl}.
+     *
+     * @param id унікальний ідентифікатор користувача
+     * @param username ім'я користувача
+     * @param email електронна пошта користувача
+     * @param password пароль користувача
+     * @param authorities колекція ролей користувача
+     */
     public UserDetailsImpl(int id, String username, String email, String password,
                            Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
@@ -35,6 +52,12 @@ public class UserDetailsImpl implements UserDetails {
         this.authorities = authorities;
     }
 
+    /**
+     * Створює об'єкт {@link UserDetailsImpl} на основі об'єкта {@link User}.
+     *
+     * @param user об'єкт користувача
+     * @return {@link UserDetailsImpl}, створений на основі даних користувача
+     */
     public static UserDetailsImpl build(User user) {
         List<GrantedAuthority> authorities = user.getRole().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName().name()))
